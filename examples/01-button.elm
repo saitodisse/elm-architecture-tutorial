@@ -57,7 +57,7 @@ buttonStyle =
     style
         [ ( "font-size", "100%" )
         , ( "padding", "6px 16px" )
-        , ( "margin", "20px" )
+        , ( "margin", "0 0 20px 0" )
         , ( "min-width", "67px" )
         ]
 
@@ -72,14 +72,21 @@ view model =
             , ( "height", "50%" )
             , ( "align-items", "center" )
             , ( "font-size", "28px" )
-            , ( "margin", "20px" )
             ]
         ]
-        [ div [] [ text (toString model) ]
-        , button [ onClick Decrement, buttonStyle ] [ text "-" ]
-        , button [ onClick Increment, buttonStyle ] [ text "+" ]
+        [ div
+            [ style
+                [ ( "font-size", "35px" )
+                , ( "padding", "16px" )
+                , ( "margin", "16px" )
+                , ( "border", "5px solid #ccc" )
+                ]
+            ]
+            [ text (toString model) ]
+        , button [ onClick Decrement, buttonStyle ] [ text "-1" ]
+        , button [ onClick Increment, buttonStyle ] [ text "+1" ]
         , if model /= 0 then
-            button [ onClick Reset, buttonStyle ] [ text "reset to zero" ]
+            button [ onClick Reset ] [ text "reset to zero" ]
           else
             text ""
         ]
