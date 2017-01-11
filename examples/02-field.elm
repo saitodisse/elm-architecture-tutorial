@@ -19,12 +19,13 @@ main =
 
 
 type alias Model =
-    String
+    { content : String
+    }
 
 
 model : Model
 model =
-    ""
+    Model ""
 
 
 
@@ -39,7 +40,12 @@ update : Msg -> Model -> Model
 update msg model =
     case msg of
         Change newContent ->
-            newContent
+            { model
+                | content =
+                    (Debug.log "[1] (UPDATE - newContent)"
+                        newContent
+                    )
+            }
 
 
 
@@ -64,7 +70,7 @@ view model =
                 (String.toLower
                     (String.reverse
                         (Debug.log "[3] (VIEW - model.content)"
-                            model
+                            model.content
                         )
                     )
                 )
