@@ -19,13 +19,12 @@ main =
 
 
 type alias Model =
-    { content : String
-    }
+    String
 
 
 model : Model
 model =
-    Model ""
+    ""
 
 
 
@@ -40,7 +39,7 @@ update : Msg -> Model -> Model
 update msg model =
     case msg of
         Change newContent ->
-            { model | content = newContent }
+            newContent
 
 
 
@@ -49,7 +48,44 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
-    div []
-        [ input [ placeholder "Text to reverse", onInput Change ] []
-        , div [] [ text (String.reverse model.content) ]
+    div [ containerStyle ]
+        [ input
+            [ inputStyle
+            , placeholder "Text to reverse"
+            , onInput
+                (Debug.log
+                    "[2] (update - onInput)"
+                    Change
+                )
+            ]
+            []
+        , div []
+            [ text
+                (String.toLower
+                    (String.reverse
+                        (Debug.log "[3] (VIEW - model.content)"
+                            model
+                        )
+                    )
+                )
+            ]
+        ]
+
+
+containerStyle =
+    style
+        [ ( "display", "flex" )
+        , ( "flex-direction", "column" )
+        , ( "justify-content", "flex-start" )
+        , ( "height", "50%" )
+        , ( "align-items", "center" )
+        , ( "font-size", "28px" )
+        ]
+
+
+inputStyle =
+    style
+        [ ( "width", "100%" )
+        , ( "font-size", "28px" )
+        , ( "text-align", "center" )
         ]
