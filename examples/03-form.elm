@@ -1,14 +1,16 @@
+module Main exposing (..)
+
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onInput)
 
 
 main =
-  Html.beginnerProgram
-    { model = model
-    , view = view
-    , update = update
-    }
+    Html.beginnerProgram
+        { model = model
+        , view = view
+        , update = update
+        }
 
 
 
@@ -16,15 +18,15 @@ main =
 
 
 type alias Model =
-  { name : String
-  , password : String
-  , passwordAgain : String
-  }
+    { name : String
+    , password : String
+    , passwordAgain : String
+    }
 
 
 model : Model
 model =
-  Model "" "" ""
+    Model "" "" ""
 
 
 
@@ -39,15 +41,15 @@ type Msg
 
 update : Msg -> Model -> Model
 update msg model =
-  case msg of
-    Name name ->
-      { model | name = name }
+    case msg of
+        Name val ->
+            { model | name = val }
 
-    Password password ->
-      { model | password = password }
+        Password val ->
+            { model | password = val }
 
-    PasswordAgain password ->
-      { model | passwordAgain = password }
+        PasswordAgain val ->
+            { model | passwordAgain = val }
 
 
 
@@ -56,21 +58,57 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
-  div []
-    [ input [ type_ "text", placeholder "Name", onInput Name ] []
-    , input [ type_ "password", placeholder "Password", onInput Password ] []
-    , input [ type_ "password", placeholder "Re-enter Password", onInput PasswordAgain ] []
-    , viewValidation model
-    ]
+    div
+        [ containerStyle
+        ]
+        [ div [ divStyle ]
+            [ label [] [ text "Name: " ]
+            , (input [ type_ "text", placeholder "Name", onInput Name ] [])
+            ]
+        , div [ divStyle ]
+            [ label [] [ text "Password: " ]
+            , (input [ type_ "password", placeholder "Password", onInput Password ] [])
+            ]
+        , div [ divStyle ]
+            [ label [] [ text "Repeate Password: " ]
+            , (input [ type_ "password", placeholder "Re-enter Password", onInput PasswordAgain ] [])
+            ]
+        , viewValidation model
+        ]
+
+
+divStyle =
+    style
+        [ ( "margin", "10px 0 0 0" ) ]
+
+
+containerStyle =
+    style
+        [ ( "display", "flex" )
+        , ( "flex-direction", "column" )
+        , ( "padding", "20px" )
+        , ( "justify-content", "flex-start" )
+        , ( "align-items", "flex-start" )
+        , ( "font-size", "18px" )
+        ]
+
+
+checkSamePassword model =
+    if model.password == model.passwordAgain then
+        ( "green", "OK" )
+    else
+        ( "red", "Passwords do not match." )
 
 
 viewValidation : Model -> Html msg
 viewValidation model =
-  let
-    (color, message) =
-      if model.password == model.passwordAgain then
-        ("green", "OK")
-      else
-        ("red", "Passwords do not match!")
-  in
-    div [ style [("color", color)] ] [ text message ]
+    let
+        ( color, message ) =
+            if (String.length model.password) > 8 then
+                checkSamePassword model
+            else
+                ( "red", "Passwords has to have a minimum of 8 characters." )
+    in
+        div
+            [ style [ ( "color", color ) ] ]
+            [ text message ]
