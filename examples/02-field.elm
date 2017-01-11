@@ -20,12 +20,13 @@ main =
 
 type alias Model =
     { content : String
+    , pickCount : Int
     }
 
 
 model : Model
 model =
-    Model ""
+    Model "Abcdef 123456" 3
 
 
 
@@ -34,6 +35,7 @@ model =
 
 type Msg
     = Change String
+    | NumberCharsChanged String
 
 
 update : Msg -> Model -> Model
@@ -47,6 +49,17 @@ update msg model =
                     )
             }
 
+        NumberCharsChanged newPickCounter ->
+            { model
+                | pickCount =
+                    case String.toInt newPickCounter of
+                        Err msg ->
+                            0
+
+                        Ok val ->
+                            val
+            }
+
 
 
 -- VIEW
@@ -58,22 +71,55 @@ view model =
         [ input
             [ inputStyle
             , placeholder "Text to reverse"
+            , value model.content
             , onInput
                 (Debug.log
-                    "[2] (update - onInput)"
+                    "[2.1] (update - onInput)"
                     Change
+                )
+            ]
+            []
+        , input
+            [ inputStyle
+            , value (toString model.pickCount)
+            , onInput
+                (Debug.log
+                    "[2.2] (update - onInput)"
+                    NumberCharsChanged
                 )
             ]
             []
         , div []
             [ text
-                (String.toLower
-                    (String.reverse
-                        (Debug.log "[3] (VIEW - model.content)"
-                            model.content
-                        )
-                    )
+                ("Reversed: "
+                    ++ (String.toLower
+                            (String.reverse
+                                (Debug.log "[3] (VIEW - model.content)"
+                                    model.content
+                                )
+                            )
+                       )
                 )
+            ]
+        , div [ divContainerRowStyle ]
+            [ div []
+                [ text
+                    (String.left
+                        model.pickCount
+                        model.content
+                    )
+                ]
+            , div []
+                [ text
+                    "..."
+                ]
+            , div []
+                [ text
+                    (String.right
+                        model.pickCount
+                        model.content
+                    )
+                ]
             ]
         ]
 
@@ -86,6 +132,13 @@ containerStyle =
         , ( "height", "50%" )
         , ( "align-items", "center" )
         , ( "font-size", "28px" )
+        ]
+
+
+divContainerRowStyle =
+    style
+        [ ( "display", "flex" )
+        , ( "flex-direction", "row" )
         ]
 
 
